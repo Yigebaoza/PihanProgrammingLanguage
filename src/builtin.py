@@ -1,6 +1,6 @@
 import sys
 
-ERROR = (NameError, SyntaxError)
+ERROR = (NameError, SyntaxError, TypeError)
 
 
 class Sys:
@@ -8,6 +8,8 @@ class Sys:
         self.so = sys.stdout
         self.si = sys.stdin
         self.io = sys.stdin, sys.stdout
+        self.exit = exit
+
 
 def write(x, pos):
     """
@@ -30,6 +32,7 @@ def write(x, pos):
                 y = x
             f.write(y)
 
+
 def writeln(x, pos):
     """
     :param x:
@@ -49,7 +52,8 @@ def writeln(x, pos):
                 y = eval(x)
             except ERROR:
                 y = x
-            f.write(y+"\n")
+            f.write(y + "\n")
+
 
 def append(x, pos):
     """
@@ -70,7 +74,8 @@ def append(x, pos):
         except ERROR:
             y = x
         f.write(y)
-        
+
+
 def appendln(x, pos):
     """
     :param x:
@@ -89,7 +94,8 @@ def appendln(x, pos):
             y = eval(x)
         except ERROR:
             y = x
-        f.write(y+"\n")
+        f.write(y + "\n")
+
 
 def readchar(pos):
     """
@@ -100,14 +106,17 @@ def readchar(pos):
         return ""
     return pos.read(1)
 
+
 def readln(pos):
     """
     :param pos:
     :return None:
     """
+
     if pos is sys.stdout or pos is sys.stdin:
         return ""
     return pos.readline()
+
 
 def read(pos, length=-1):
     """
@@ -115,11 +124,13 @@ def read(pos, length=-1):
     :param length:
     :return:
     """
+
     if pos is sys.stdout or pos is sys.stdin:
         return ""
     if length == -1:
         return pos.read()
     return pos.read(length)
+
 
 def ward(x, pos, length=-1):
     """
@@ -128,7 +139,8 @@ def ward(x, pos, length=-1):
     :param length:
     :return:
     """
-    if length == 0 or (pos == sys.stdout or pos == sys.stdin):
+
+    if length == -1 or pos == (sys.stdout, pos == sys.stdin):
         try:
             y = eval(x)
         except ERROR:
@@ -145,13 +157,14 @@ PHAN_BUILTINS = {
     'so': system.so,
     'si': system.si,
     'io': system.io,
-    'wardln': lambda text, pos, length=0: ward(text, pos, length),
-    'ward': lambda text, pos, length=0: ward(text, pos, length),
-    'writeln': lambda text, stream: writeln(text, stream),
-    'write': lambda text, stream: write(text, stream),
-    'append': lambda text, stream: append(text, stream),
-    'appendln': lambda text, stream: appendln(text, stream),
-    'readchar': lambda pos: readchar(pos),
-    'readln': lambda pos: readln(pos),
-    'read': lambda pos, length=0: read(pos, length)
+    'exit': system.exit,
+    'wardln': ward,
+    'ward': ward,
+    'writeln': writeln,
+    'write': write,
+    'append': append,
+    'appendln': appendln,
+    'readchar': readchar,
+    'readln': readln,
+    'read': read
 }
