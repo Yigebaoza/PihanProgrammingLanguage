@@ -8,7 +8,7 @@ class Sys:
         self.so = sys.stdout
         self.si = sys.stdin
         self.io = sys.stdin, sys.stdout
-        self.exit = exit
+        self.exit = sys.exit
 
 
 def write(x, pos):
