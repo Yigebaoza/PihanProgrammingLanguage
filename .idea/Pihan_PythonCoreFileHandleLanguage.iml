@@ -5,7 +5,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
-      <excludeFolder url="file://$MODULE_DIR$/ph_files" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.12 (Pihan_PythonCoreFileHandleLanguage)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -20,6 +20,9 @@ def write(x, pos):
     """
     if pos is sys.stdout or pos is sys.stdin:
         try:
+            if "is" in x:
+                print(x)
+                return
             y = eval(x)
             print(y, end='')
         except ERROR:
@@ -42,6 +45,9 @@ def writeln(x, pos):
     """
     if pos is sys.stdout or pos is sys.stdin:
         try:
+            if "is" in x:
+                print(x)
+                return
             y = eval(x)
             print(y)
         except ERROR:
@@ -64,6 +70,9 @@ def append(x, pos):
     """
     if pos is sys.stdout or pos is sys.stdin:
         try:
+            if "is" in x:
+                print(x)
+                return
             y = eval(x)
             print(y, end='')
         except ERROR:
@@ -85,6 +94,9 @@ def appendln(x, pos):
     """
     if pos is sys.stdout or pos is sys.stdin:
         try:
+            if "is" in x:
+                print(x)
+                return
             y = eval(x)
             print(y)
         except ERROR:
@@ -142,6 +154,8 @@ def ward(x, pos, length=-1):
 
     if length == -1 or pos == (sys.stdout, pos == sys.stdin):
         try:
+            if "is" in x:
+                return input(x)
             y = eval(x)
         except ERROR:
             y = x
@@ -166,5 +180,5 @@ PHAN_BUILTINS = {
     'appendln': appendln,
     'readchar': readchar,
     'readln': readln,
-    'read': read
+    'read': read,
 }
