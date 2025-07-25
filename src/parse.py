@@ -85,8 +85,8 @@ class PihanParser:
         for code_col in range(codes.index(line+"\n")+1, len(codes)):
             if not code_col:
                 continue
-            elif codes[code_col] == "}":
-                continue
+            elif codes[code_col].strip() == "}":
+                break
             body.append(codes[code_col].replace("in::", "").strip())
         return {
             'type': 'cs',
@@ -103,7 +103,7 @@ class PihanParser:
         for code_col in range(codes.index(line+"\n")+1, len(codes)):
             if not code_col:
                 continue
-            elif codes[code_col] == "}":
+            elif codes[code_col].strip() == "}":
                 break
             body.append(codes[code_col].replace("in::", "").strip())
         condition = self.cs_stack[-1]['condition']  # 条件表达式

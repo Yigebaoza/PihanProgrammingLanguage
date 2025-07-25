@@ -1,5 +1,4 @@
 import sys
-import os
 
 from parse import PihanParser
 
@@ -11,7 +10,7 @@ class PihanRuntime:
         self.parser = PihanParser()
 
     def execute_file(self, filename):
-        with open(os.path.join(os.path.curdir, filename), 'r', encoding='utf-8') as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             code = f.readlines()
         ast = self.parser.parse(code)
         self._execute_ast(ast)
@@ -42,7 +41,10 @@ class PihanRuntime:
     def ipe_run(self):
         while True:
             code = input(">?")
-            ast = self.parser.parse([code])
+            try:
+                ast = self.parser.parse([f"writeln({code}, so)"])
+            except:
+                ast = self.parser.parse([code])
             try:
                 self._execute_ast(ast)
             except Exception as e:
