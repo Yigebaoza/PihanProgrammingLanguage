@@ -1,6 +1,5 @@
 from parse import PihanParser
 
-
 class PihanRuntime:
     def __init__(self):
         self.parser = PihanParser()
@@ -20,6 +19,8 @@ class PihanRuntime:
                     self._handle_callfunc(node)
                 case 'cs':
                     self._handle_cs(node)
+                case 'func_def':
+                    self._handle_func_def(node)
 
     def _handle_callfunc(self, node):
         self.parser.globals[node['name']](*(node['args']))
@@ -29,10 +30,26 @@ class PihanRuntime:
 
     def _handle_cs(self, node):
         if eval(node['condition'], self.parser.globals):
+            ast = []
             for line in node['codes']:
                 if line == '}':
                     break
-                exec(line.strip("var").strip(), *self.parser.all)
+                ast.append(*self.parser.parse([line]))
+
+            self._execute_ast(ast)
+
+    def _handle_func_def(self, node):
+        """
+        def {name}(args[i]...):
+        \tcodes[i]\n...
+        """
+        def_code = f"def {node['name']}("
+        for arg in node['args']:
+            def_code += f"{arg}, "
+        def_code = def_code+ "):\n"
+        for code in node['codes']:
+            def_code += f"\t{code.replace("<", "return")}\n"
+        exec(def_code, self.parser.globals)
 
     def ipe_run(self):
         while True:

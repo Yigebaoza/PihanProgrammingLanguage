@@ -1,0 +1,1 @@
+print(f"res: {eval("return 1")}")

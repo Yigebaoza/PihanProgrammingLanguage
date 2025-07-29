@@ -166,7 +166,7 @@ def ward(x, pos, length=-1):
 
 
 system = Sys()
-PHAN_BUILTINS = {
+PIHAN_BUILTINS = {
     'sys': system,
     'so': system.so,
     'si': system.si,
@@ -181,4 +181,8 @@ PHAN_BUILTINS = {
     'readchar': readchar,
     'readln': readln,
     'read': read,
+    'int': int,
+    'float': float,
+    'str': str,
+    'bool': bool
 }
