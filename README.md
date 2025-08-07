@@ -42,7 +42,7 @@
     操作: 先从`streams[0]`写入内容，再返回从`streams[1]`读取的内容
     
   #### 7. `type`(a)
-  - type: int, str, float（ 暂不支持dict, list, 可使用，但有漏洞 ）
+  - type: int, str, float, bool（ 暂不支持dict, list, 可使用，但有漏洞 ）
   - a: 值或变量
     
     操作: 将`a`转换成`type`，再返回 
@@ -74,6 +74,7 @@
   ```
   ### 函数
   ```pihan
+  // < 是 return 的意思，但不是return
   func add(a, b)&{
     < a + b
   }
