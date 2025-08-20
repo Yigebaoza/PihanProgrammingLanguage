@@ -36,6 +36,10 @@ class PihanParser:
                 cs = self._parse_jud_cs(line, code_lines)
                 self.cs_stack.append(cs)
                 ast.append(cs)
+            elif line.startswith("nud "):
+                cs = self._parse_nud_cs(line, code_lines)
+                self.cs_stack.append(cs)
+                ast.append(cs)
             elif line.startswith("not "):  # 匹配非条件语句
                 cs = self._parse_not_cs(line, code_lines)
                 ast.append(cs)
@@ -49,11 +53,11 @@ class PihanParser:
         # 解析 func_name(content, so) 格式
         func = line.split('(', 1)
         name = func[0].strip()  # 获取函数名
-        strip = func[1].rstrip(")").strip()
+        strip = func[1].strip().rstrip(")")
         if strip == "":
             args = []
         else:
-            args = eval(strip, self.globals)
+            args = eval(f"[{strip}]", self.globals)
             if not (isinstance(args, tuple) or isinstance(args, list)):
                 args = [args]
 
@@ -93,10 +97,11 @@ class PihanParser:
         return {
             'type': 'var_decl',
             'name': name,
-            'value_expr': res
+            'value_expr': res,
         }
 
-    def _parse_jud_cs(self, line, codes):
+    @staticmethod
+    def _parse_jud_cs(line, codes):
         """
         jud cond?{code...}
         """
@@ -114,8 +119,29 @@ class PihanParser:
                 break
         body = [codes[code_col].replace("in::", "").strip()
                 for code_col in range(start, stop)
-                if code_col]
-        del body[-1]
+                if code_col][:-1]
+        return {
+            'type': 'cs',
+            'condition': condition,
+            'codes': body
+        }
+
+    def _parse_nud_cs(self, line, codes):
+        parts = line.split("nud ")[1]
+        split = parts.split("?")
+        condition = f"not {self.cs_stack[-1]['condition']} and {split[0]}"  # 条件表达式
+        # the line of index ~ end of index
+        start = codes.index(line + "\n") + 1
+        stop = 0
+        for code_col in range(start, len(codes)):
+            if not code_col:
+                continue
+            elif codes[code_col].strip() == "}":
+                stop = code_col + 1
+                break
+        body = [codes[code_col].replace("in::", "").strip()
+                for code_col in range(start, stop)
+                if code_col][:-1]
         return {
             'type': 'cs',
             'condition': condition,
@@ -123,10 +149,6 @@ class PihanParser:
         }
 
     def _parse_not_cs(self, line, codes):
-        """
-        not {code...}
-        :param codes:
-        """
         body = []
         for code_col in range(codes.index(line+"\n")+1, len(codes)):
             if not code_col:
@@ -141,7 +163,8 @@ class PihanParser:
             'codes': body
         }
 
-    def _parse_func_def(self, line, codes):
+    @staticmethod
+    def _parse_func_def(line, codes):
         """
         func_name(disp nop)&{
             code...
